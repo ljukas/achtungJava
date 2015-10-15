@@ -1,6 +1,6 @@
 package engine;
 
-import graphics.MainFrame;
+import window.MainFrame;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,11 +14,11 @@ public class Game implements KeyListener
     /**
      * The width of the gameboard.
      */
-    public static final int GAME_WIDTH = 800;
+    public static final int GAME_WIDTH = 1050;
     /**
      * The Height of the gameboard.
      */
-    public static final int GAME_HEIGHT = 550;
+    public static final int GAME_HEIGHT = 900;
 
     public static Game CURRENT_GAME = null;
 

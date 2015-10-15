@@ -1,4 +1,4 @@
-package graphics;
+package window;
 
 import engine.Game;
 
