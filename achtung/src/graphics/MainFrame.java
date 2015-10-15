@@ -2,14 +2,15 @@ package graphics;
 
 import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class MainFrame extends JFrame
 {
-    private GamePanel gamePanel;
+    private GamePanel gamePanel = null;
 
     public MainFrame() {
-	super("Achtung, ...");
+	super("Achtung av Lukas");
 
 	init();
     }
@@ -21,5 +22,13 @@ public class MainFrame extends JFrame
 	mainPanel.setLayout(new BorderLayout());		// BorderLayout used since there are only two different panels.
 
 	gamePanel = new GamePanel();
+
+	mainPanel.add(gamePanel, BorderLayout.CENTER);
+
+	setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public GamePanel getGamePanel() {
+	return gamePanel;
     }
 }

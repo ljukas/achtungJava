@@ -9,8 +9,8 @@ public class Achtung
 
 	MainFrame frame = new MainFrame();
 	frame.pack();
-	frame.setVisiable(true);
+	frame.setVisible(true);
 
-
+	new Game(frame);
     }
 }
