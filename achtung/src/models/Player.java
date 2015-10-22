@@ -11,6 +11,7 @@ public class Player
     private boolean turnLeft;
     private Line line;
     private boolean dead;
+    private int points;
 
     public Player(Color playerColor, char leftKey, char rightKey) {
         this.playerColor = playerColor;
@@ -18,6 +19,7 @@ public class Player
         this.rightKey = rightKey;
         this.line = new Line();
         this.dead = false;
+        this.points = 0;
     }
 
 
@@ -71,6 +73,14 @@ public class Player
 
     public Line getLine() {
         return line;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(final int points) {
+        this.points = points;
     }
 }
 

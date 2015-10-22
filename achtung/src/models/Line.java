@@ -1,29 +1,30 @@
 package models;
 
-import engine.Game;
-
 public class Line
 {
     public float x;
     public float y;
     public float pi;
     public float width;
+    public double speed;
     public boolean changeSide;
+
+    private static final int TURN_SHARPNESS = 60;
 
 
     public Line() {
     }
 
     public void movePlayer() {
-        x += (float) (Math.cos(pi) * 1.5);
-        y += (float) (Math.sin(pi) * 1.5);
+        x += (float) (Math.cos(pi) * speed);
+        y += (float) (Math.sin(pi) * speed);
     }
 
     public void turnLeft() {
-        pi += Math.PI / 60;
+        pi += Math.PI / TURN_SHARPNESS;
     }
 
     public void turnRight() {
-        pi -= Math.PI / 60;
+        pi -= Math.PI / TURN_SHARPNESS;
     }
 }

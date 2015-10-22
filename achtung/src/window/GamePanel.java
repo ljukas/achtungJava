@@ -53,7 +53,7 @@ public class GamePanel extends JPanel
 	this.lineImage = lineImage;
     }
 
-    public void setPlayers(Player[] players) {
+    public void addPlayers(Player[] players) {
         this.players = players;
     }
 }

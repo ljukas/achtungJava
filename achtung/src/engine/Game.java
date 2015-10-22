@@ -24,6 +24,7 @@ public class Game implements KeyListener, ActionListener
     private Player[] players;
     private Logic logic;
     private Timer timer;
+    public boolean pause = true;
 
 
     public static final int GAME_WIDTH = 1050;
@@ -44,15 +45,18 @@ public class Game implements KeyListener, ActionListener
 	CURRENT_GAME = this;
 
 	lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
-        frame.getGamePanel().setLineImage(lineImage);
-        frame.getGamePanel().setPlayers(players);
-        logic.placePlayers(players);
 
+        frame.getGamePanel().setLineImage(lineImage);
+        frame.getGamePanel().addPlayers(players);
+        frame.getSidePanel().addPlayers(players);
 	this.frame.pack();
+
+
+        logic.placePlayers(players);
 
         timer = new Timer(1000 / FPS, this); // Fires of the actionPerformed-event on each timer tick
 
-        actionPerformed(null);
+        //actionPerformed(null);
 
 
         timer.start();
@@ -71,15 +75,11 @@ public class Game implements KeyListener, ActionListener
             float x = pLine.x;
             float y = pLine.y;
 
-            boolean draw = p.isDead();
-            logic.movePlayer(p);
+            boolean drawPlayer = logic.movePlayer(lineImage, p);
 
-            if(!draw && !pLine.changeSide) {
-                Color c = p.getPlayerColor();
-
-                g2.setColor(c);
-                g2.setStroke(new BasicStroke(pLine.width, BasicStroke.CAP_ROUND,
-                                             BasicStroke.JOIN_ROUND));
+            if(drawPlayer && !pLine.changeSide) {
+                g2.setColor(p.getPlayerColor());
+                g2.setStroke(new BasicStroke(pLine.width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 g2.draw(new Line2D.Float(x, y, pLine.x, pLine.y));
             }
             pLine.changeSide = false;
@@ -87,6 +87,7 @@ public class Game implements KeyListener, ActionListener
 
         g2.dispose();
 
+        frame.getSidePanel().updatePoints();
         frame.getGamePanel().repaint();
 
         }
@@ -107,7 +108,8 @@ public class Game implements KeyListener, ActionListener
         char c = Character.toLowerCase(e.getKeyChar());
 
 
-        if(c == ' ') {
+        if(c == ' ' && pause) {
+            pause = false;
             start();
         }
 

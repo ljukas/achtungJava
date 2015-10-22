@@ -1,5 +1,7 @@
 package engine;
 
+import java.awt.image.BufferedImage;
+
 import models.Line;
 import models.Player;
 
@@ -7,9 +9,9 @@ import models.Player;
 public class Logic
 {
 
-    public void movePlayer(Player player) {
+    public boolean movePlayer(BufferedImage lineImage, Player player) {
             if(player.isDead()) {
-                return;
+                return false;
             }
 
             Line pLine = player.getLine();
@@ -18,6 +20,13 @@ public class Logic
                 pLine.turnRight();
             } else if(player.isTurnLeft()) {
                 pLine.turnLeft();
+            }
+
+            // check if collission
+            boolean col = checkCollission(lineImage, player);
+
+            if(col) {
+                return false;
             }
 
             pLine.movePlayer();
@@ -37,6 +46,27 @@ public class Logic
                 pLine.y = 0;
                 pLine.changeSide = true;
             }
+
+        return true;
+    }
+
+    private boolean checkCollission(BufferedImage lineImage, Player player) {
+        Line pLine = player.getLine();
+
+        float dx = pLine.x + (float) (Math.cos(pLine.pi) * pLine.speed * 2.75);
+        float dy = pLine.y + (float) (Math.sin(pLine.pi) * pLine.speed * 2.75);
+
+        if(lineImage.getRGB((int)dx, (int)dy) != 0) {
+            collission(player);
+            return true;
+        }
+        return false;
+    }
+
+    private void collission(Player player) {
+        player.setDead(true);
+        player.setPoints(player.getPoints() + 1);
+
     }
 
     public void startRightTurn(Player player) {
@@ -62,6 +92,7 @@ public class Logic
             pLine.y = (float) (Math.random() * (Game.GAME_HEIGHT - 150) + 100);
             pLine.pi = (float) (Math.random() * Math.PI);
             pLine.width = 5; // set witdh of player to 5 pixels
+            pLine.speed = 1.5; // set speed of player
             p.setDead(false);
         }
     }
