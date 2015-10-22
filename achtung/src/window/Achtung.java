@@ -1,6 +1,9 @@
 package window;
 
 import engine.Game;
+import engine.Logic;
+import java.awt.Color;
+import models.Player;
 
 public class Achtung
 {
@@ -11,6 +14,12 @@ public class Achtung
 	frame.pack();
 	frame.setVisible(true);
 
-	new Game(frame);
+	Logic logic = new Logic();
+	Player[] players = new Player[] {
+			new Player(Color.CYAN, 'a', 's'),
+			// new Player(Color.RED, 'k', 'l'),
+	};
+
+	new Game(players, logic, frame);
     }
 }
