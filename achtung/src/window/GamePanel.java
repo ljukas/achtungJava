@@ -7,6 +7,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import engine.Game;
+import models.Line;
 import models.Player;
 
 public class GamePanel extends JPanel
@@ -20,6 +21,7 @@ public class GamePanel extends JPanel
 	setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
     }
 
+    // Draw players
     @Override
     public void paint(Graphics g) {
 	super.paint(g);
@@ -32,6 +34,14 @@ public class GamePanel extends JPanel
         g2.scale(1.0, -1.0);
 
 	g2.drawImage(this.lineImage, null, 0, 0);
+
+        if(this.players == null) return;
+
+        for(Player p : this.players) {
+            Line pLine = p.getLine();
+            g2.setColor(p.getPlayerColor());
+            g2.fillOval((int) (pLine.x - pLine.width / 2), (int) (pLine.y - pLine.width / 2), (int) pLine.width, (int) pLine.width);
+        }
     }
 
     @Override

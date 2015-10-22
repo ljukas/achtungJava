@@ -1,13 +1,21 @@
 package engine;
 
+import java.awt.geom.Line2D;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
+import models.Line;
 import models.Player;
 import window.MainFrame;
+
+import javax.swing.*;
 
 public class Game implements KeyListener, ActionListener
 {
@@ -15,15 +23,12 @@ public class Game implements KeyListener, ActionListener
     private MainFrame frame;
     private Player[] players;
     private Logic logic;
+    private Timer timer;
 
-    /**
-     * The width of the gameboard.
-     */
+
     public static final int GAME_WIDTH = 1050;
-    /**
-     * The Height of the gameboard.
-     */
     public static final int GAME_HEIGHT = 900;
+    private static int FPS = 60;
 
     public static Game CURRENT_GAME = null;
 
@@ -41,18 +46,55 @@ public class Game implements KeyListener, ActionListener
 	lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         frame.getGamePanel().setLineImage(lineImage);
         frame.getGamePanel().setPlayers(players);
+        logic.placePlayers(players);
 
 	this.frame.pack();
+
+        timer = new Timer(1000 / FPS, this); // Fires of the actionPerformed-event on each timer tick
+
+        actionPerformed(null);
+
+
+        timer.start();
     }
 
+    // If a player is alive, move it, check if it dies when moved etc.
     @Override public void actionPerformed(final ActionEvent e) {
+        Graphics2D g2 = lineImage.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_ON);
+
+
+        for(Player p : this.players) {
+            Line pLine = p.getLine();
+
+            float x = pLine.x;
+            float y = pLine.y;
+
+            boolean draw = p.isDead();
+            logic.movePlayer(p);
+
+            if(!draw && !pLine.changeSide) {
+                Color c = p.getPlayerColor();
+
+                g2.setColor(c);
+                g2.setStroke(new BasicStroke(pLine.width, BasicStroke.CAP_ROUND,
+                                             BasicStroke.JOIN_ROUND));
+                g2.draw(new Line2D.Float(x, y, pLine.x, pLine.y));
+            }
+            pLine.changeSide = false;
+        }
+
+        g2.dispose();
+
+        frame.getGamePanel().repaint();
 
         }
 
     @Override public void keyPressed(final KeyEvent e) {
         char c = Character.toLowerCase(e.getKeyChar());
 
-        for(Player p : players) {
+        for(Player p : this.players) {
             if(p.getLeftKey() == c) {
                 logic.startLeftTurn(p);
             } else if(p.getRightKey() == c) {
@@ -64,7 +106,12 @@ public class Game implements KeyListener, ActionListener
     @Override public void keyReleased(final KeyEvent e) {
         char c = Character.toLowerCase(e.getKeyChar());
 
-        for(Player p : players) {
+
+        if(c == ' ') {
+            start();
+        }
+
+        for(Player p : this.players) {
             if(p.getLeftKey() == c) {
                 logic.stopLeftTurn(p);
             } else if(p.getRightKey() == c) {
