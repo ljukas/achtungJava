@@ -25,6 +25,7 @@ public class SidePanel extends JPanel
     public void addPlayers(Player[] players) {
 	this.players = players;
 
+	this.removeAll();
 
 	this.points = new JLabel[players.length];
 
@@ -34,7 +35,7 @@ public class SidePanel extends JPanel
 	    playerLabel.setFont(new Font(playerLabel.getFont().getName(), playerLabel.getFont().getStyle(), 40));
 	    playerLabel.setBorder(new LineBorder(Color.DARK_GRAY));
 	    playerLabel.setForeground(p.getPlayerColor());
-	    playerLabel.setPreferredSize(new Dimension(100, 100));
+	    playerLabel.setPreferredSize(new Dimension(250, 100));
 	    this.add(playerLabel);
 	    points[i] = playerLabel;
 	    i++;
@@ -46,6 +47,14 @@ public class SidePanel extends JPanel
     public void updatePoints() {
 	for(int i = 0; i < players.length; i++) {
 	    points[i].setText(String.valueOf(players[i].getPoints()));
+	}
+    }
+
+    public void winner(Player player) {
+	for(int i = 0; i < players.length; i++) {
+	    if(Objects.equals(players[i].getPlayerColor(), player.getPlayerColor())) {
+		points[i].setText("WINNER");
+	    }
 	}
     }
 

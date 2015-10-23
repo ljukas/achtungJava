@@ -2,7 +2,6 @@ package engine;
 
 import java.awt.geom.Line2D;
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
@@ -19,47 +18,64 @@ import javax.swing.*;
 
 public class Game implements KeyListener, ActionListener
 {
-    public BufferedImage lineImage;
+    /**
+     * Game width is 1050 pixels
+     */
+    public static final int GAME_WIDTH = 1050;
+    /**
+     * Game height is 900 pixels
+     */
+    public static final int GAME_HEIGHT = 900;
+    /**
+     * The delay between each round starts is 2 seconds
+     */
+    private static final int INITIAL_DELAY = 2000;
+    /**
+     * The game speed is 60 frames per second
+     */
+    private static final int FPS = 60;
+
+    private BufferedImage lineImage = null;
     private MainFrame frame;
     private Player[] players;
     private Logic logic;
-    private Timer timer;
-    public boolean pause = true;
-
-
-    public static final int GAME_WIDTH = 1050;
-    public static final int GAME_HEIGHT = 900;
-    private static int FPS = 60;
-
-    public static Game CURRENT_GAME = null;
+    private Timer timer = null;
+    private boolean pause = true;
+    private int winCondition;
+    private int time;
+    public static Game CURRENTGAME = null;
 
     public Game(Player[] players, Logic logic, MainFrame frame) {
-	this.frame = frame;
+        this.frame = frame;
         this.players = players;
         this.logic = logic;
 
-	frame.getGamePanel().addKeyListener(this);
+        frame.getGamePanel().addKeyListener(this);
     }
 
     public void start() {
-	CURRENT_GAME = this;
+        CURRENTGAME = this;
 
-	lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+        lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
 
         frame.getGamePanel().setLineImage(lineImage);
         frame.getGamePanel().addPlayers(players);
         frame.getSidePanel().addPlayers(players);
-	this.frame.pack();
+        this.frame.pack();
 
-
+        // Place the players on the board
         logic.placePlayers(players);
 
-        timer = new Timer(1000 / FPS, this); // Fires of the actionPerformed-event on each timer tick
+        // Repaint here so when a new round start the old game isn't shown in the 2 sec starting period
+        frame.getGamePanel().repaint();
 
-        //actionPerformed(null);
+        // The rules of the game state that to win you have to get points equal to 10 times number of players minus 10
+        winCondition = this.players.length * 10 - 10;
 
-
-        timer.start();
+        time = 0;
+        timer = new Timer(1000 / FPS, this);    // Fires of the actionPerformed-event on each timer tick
+        timer.setInitialDelay(INITIAL_DELAY);            // Start game after 2 sec delay
+        timer.start();                          // Start game
     }
 
     // If a player is alive, move it, check if it dies when moved etc.
@@ -70,27 +86,62 @@ public class Game implements KeyListener, ActionListener
 
 
         for(Player p : this.players) {
+            logic.timeForHole(p, time);
             Line pLine = p.getLine();
 
             float x = pLine.x;
             float y = pLine.y;
 
-            boolean drawPlayer = logic.movePlayer(lineImage, p);
+            // Move the current player one step ahead and check if we want to draw the line behind the player
+            boolean drawLine = logic.movePlayer(lineImage, p);
 
-            if(drawPlayer && !pLine.changeSide) {
+            // Draw the line behind the player
+            if(drawLine) {
                 g2.setColor(p.getPlayerColor());
                 g2.setStroke(new BasicStroke(pLine.width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
                 g2.draw(new Line2D.Float(x, y, pLine.x, pLine.y));
             }
-            pLine.changeSide = false;
+
+            // If the player collided with something give the other players one points
+            logic.givePoints(this.players, p);
+
         }
-
         g2.dispose();
-
         frame.getSidePanel().updatePoints();
         frame.getGamePanel().repaint();
+        time += 1;
 
+
+        // Check if all but one players are dead. If so, start new round, also check if a player has won
+        if(logic.newRoundCheck(this.players)) {
+            checkForWinner();
+            startNewRound();
         }
+    }
+
+    // Checks for a winner, if winner found set all points to zero and announce winner
+    private void checkForWinner() {
+        boolean winnerFound = false;
+        for(Player p : players) {
+	    if(p.getPoints() >= winCondition) {
+		frame.getSidePanel().winner(p);
+                winnerFound = true;
+	    }
+	}
+        // If winner found set all points to zero
+        if(winnerFound) {
+            for(Player p : players) {
+                p.setPoints(0);
+            }
+        }
+    }
+
+    private void startNewRound() {
+        pause = true;
+        timer.stop();
+        time = 0;
+    }
+
 
     @Override public void keyPressed(final KeyEvent e) {
         char c = Character.toLowerCase(e.getKeyChar());
@@ -123,7 +174,5 @@ public class Game implements KeyListener, ActionListener
     }
 
     @Override public void keyTyped(final KeyEvent e) {
-
     }
-
 }

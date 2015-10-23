@@ -11,6 +11,7 @@ public class Player
     private boolean turnLeft;
     private Line line;
     private boolean dead;
+    private boolean collided;
     private int points;
 
     public Player(Color playerColor, char leftKey, char rightKey) {
@@ -20,6 +21,7 @@ public class Player
         this.line = new Line();
         this.dead = false;
         this.points = 0;
+        this.collided = false;
     }
 
 
@@ -81,6 +83,14 @@ public class Player
 
     public void setPoints(final int points) {
         this.points = points;
+    }
+
+    public void setCollided(final boolean collided) {
+        this.collided = collided;
+    }
+
+    public boolean didCollide() {
+        return collided;
     }
 }
 

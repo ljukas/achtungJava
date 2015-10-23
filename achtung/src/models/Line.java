@@ -8,12 +8,12 @@ public class Line
     public float width;
     public double speed;
     public boolean changeSide;
+    public boolean holeInLine;
+    public int timeWhenHole;
+    public int okToHole;
 
     private static final int TURN_SHARPNESS = 60;
 
-
-    public Line() {
-    }
 
     public void movePlayer() {
         x += (float) (Math.cos(pi) * speed);

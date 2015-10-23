@@ -16,9 +16,10 @@ public class Achtung
 
 	Logic logic = new Logic();
 	Player[] players = new Player[] {
-			new Player(Color.CYAN, 'a', 's'),
-			new Player(Color.RED, 'k', 'l'),
-			//new Player(Color.YELLOW, 'v', 'b')
+			new Player(Color.CYAN, 'q', 'w'),
+			new Player(Color.RED, 'o', 'p'),
+			//new Player(Color.YELLOW, 'z', 'x'),
+			//new Player(Color.GREEN, 'b', 'n'),
 	};
 
 	new Game(players, logic, frame);
