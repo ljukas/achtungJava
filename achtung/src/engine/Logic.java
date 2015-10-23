@@ -14,28 +14,28 @@ public class Logic
         Line pLine = player.getLine();
 
         // If the player is to make a hole, stop doing after 13 frames
-        if(pLine.holeInLine ) {
-            if((time - pLine.timeWhenHole) >= (pLine.width * 2.5)) {
-                pLine.holeInLine = false;
-                pLine.timeWhenHole = 0;
-                pLine.okToHole = 60;
+        if(pLine.isHoleInLine()) {
+            if((time - pLine.getTimeWhenHole()) >= (pLine.getWidth() * 2.5)) {
+                pLine.setHoleInLine(false);
+                pLine.setTimeWhenHole(0);
+                pLine.setOkToHole(60);
             }
             return;
         }
 
-        if(pLine.okToHole > 0) {
-            pLine.okToHole -= 1;
+        if(pLine.getOkToHole() > 0) {
+            pLine.setOkToHole(pLine.getOkToHole() - 1);
         }
 
         // Dont let holes be created first 1.5 seconds of the game or before 1 second passed since last hole
-        if(time > 90 && pLine.okToHole == 0) {
+        if(time > 90 && pLine.getOkToHole() == 0) {
             Random rand = new Random();
 
             int startHole = rand.nextInt(200) + 1;
 
-            if(startHole > 198) {
-                pLine.holeInLine = true;
-                pLine.timeWhenHole = time;
+            if(startHole > 197) {
+                pLine.setHoleInLine(true);
+                pLine.setTimeWhenHole(time);
             }
 
         }
@@ -80,14 +80,14 @@ public class Logic
          *  - This is because otherwise you can kind of drive over other people with your
          *  - snake body.
          */
-        float dx = pLine.x + (float) (Math.cos(pLine.pi) * pLine.speed * (pLine.width / 1.75));
-        float dy = pLine.y + (float) (Math.sin(pLine.pi) * pLine.speed * (pLine.width / 1.75));
+        float dx = pLine.getX() + (float) (Math.cos(pLine.getPi()) * pLine.getSpeed() * (pLine.getWidth() / 1.75));
+        float dy = pLine.getY() + (float) (Math.sin(pLine.getPi()) * pLine.getSpeed() * (pLine.getWidth() / 1.75));
 
-        float dlx = pLine.x + (float) (Math.cos(pLine.pi + (Math.PI/4)) * pLine.speed * (pLine.width / 1.75));
-        float dly = pLine.y + (float) (Math.sin(pLine.pi + (Math.PI/4)) * pLine.speed * (pLine.width / 1.75));
+        float dlx = pLine.getX() + (float) (Math.cos(pLine.getPi() + (Math.PI/4)) * pLine.getSpeed() * (pLine.getWidth() / 1.75));
+        float dly = pLine.getY() + (float) (Math.sin(pLine.getPi() + (Math.PI/4)) * pLine.getSpeed() * (pLine.getWidth() / 1.75));
 
-        float drx = pLine.x + (float) (Math.cos(pLine.pi - (Math.PI/4)) * pLine.speed * (pLine.width / 1.75));
-        float dry = pLine.y + (float) (Math.sin(pLine.pi - (Math.PI/4)) * pLine.speed * (pLine.width / 1.75));
+        float drx = pLine.getX() + (float) (Math.cos(pLine.getPi() - (Math.PI/4)) * pLine.getSpeed() * (pLine.getWidth() / 1.75));
+        float dry = pLine.getY() + (float) (Math.sin(pLine.getPi() - (Math.PI/4)) * pLine.getSpeed() * (pLine.getWidth() / 1.75));
 
 
         // Check if the collission check is out of bonds. If it is we dont want to check there
@@ -123,7 +123,7 @@ public class Logic
         }
         pLine.movePlayer();
 
-        if(pLine.holeInLine) {
+        if(pLine.isHoleInLine()) {
             return false;
         }
 
@@ -148,23 +148,23 @@ public class Logic
 
     // Can be used for superpower that makes it possible to drive through outer walls.
     private boolean checkAndChangeSide(final Line pLine) {
-        if(pLine.x < 0) {
-            pLine.x = Game.GAME_WIDTH;
-            pLine.changeSide = true;
+        if(pLine.getX() < 0) {
+            pLine.setX(Game.GAME_WIDTH);
+            pLine.setChangeSide(true);
             return true;
-        } else if (pLine.x > Game.GAME_WIDTH) {
-            pLine.x = 0;
-            pLine.changeSide = true;
+        } else if (pLine.getX() > Game.GAME_WIDTH) {
+            pLine.setX(0);
+            pLine.setChangeSide(true);
             return true;
         }
 
-        if(pLine.y < 0) {
-            pLine.y = Game.GAME_HEIGHT;
-            pLine.changeSide = true;
+        if(pLine.getY() < 0) {
+            pLine.setY(Game.GAME_HEIGHT);
+            pLine.setChangeSide(true);
             return true;
-        } else if (pLine.y > Game.GAME_HEIGHT) {
-            pLine.y = 0;
-            pLine.changeSide = true;
+        } else if (pLine.getY() > Game.GAME_HEIGHT) {
+            pLine.setY(0);
+            pLine.setChangeSide(true);
             return true;
         }
         return false;
@@ -191,14 +191,14 @@ public class Logic
     public void placePlayers(Player[] players) {
         for(Player p : players) {
             Line pLine = p.getLine();
-            pLine.x = (float) (Math.random() * (Game.GAME_WIDTH - 150) + 100);
-            pLine.y = (float) (Math.random() * (Game.GAME_HEIGHT - 150) + 100);
-            pLine.pi = (float) (Math.random() * Math.PI);
-            pLine.width = 5; // set witdh of player to 5 pixels
-            pLine.speed = 1.75; // set speed of player
-            pLine.holeInLine = false;
-            pLine.timeWhenHole = 0;
-            pLine.okToHole = 0;
+            pLine.setX((float) (Math.random() * (Game.GAME_WIDTH - 150) + 100));
+            pLine.setY((float) (Math.random() * (Game.GAME_HEIGHT - 150) + 100));
+            pLine.setPi((float) (Math.random() * Math.PI));
+            pLine.setWidth(5); // set witdh of player to 5 pixels
+            pLine.setSpeed(1.75); // set speed of player
+            pLine.setHoleInLine(false);
+            pLine.setTimeWhenHole(0);
+            pLine.setOkToHole(0);
             p.setDead(false);
         }
     }

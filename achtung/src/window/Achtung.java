@@ -5,8 +5,10 @@ import engine.Logic;
 import java.awt.Color;
 import models.Player;
 
-public class Achtung
+public final class Achtung
 {
+    private Achtung() {}
+
     public static void main(String[] args) {
 
 
@@ -22,6 +24,6 @@ public class Achtung
 			//new Player(Color.GREEN, 'b', 'n'),
 	};
 
-	new Game(players, logic, frame);
+	final Game game = new Game(players, logic, frame);
     }
 }

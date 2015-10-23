@@ -2,13 +2,12 @@ package window;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class MainFrame extends JFrame
 {
     private GamePanel gamePanel = null;
-    public SidePanel sidePanel = null;
+    private SidePanel sidePanel = null;
 
     public MainFrame() {
 	super("Achtung av Lukas");
@@ -28,7 +27,7 @@ public class MainFrame extends JFrame
 	mainPanel.add(gamePanel, BorderLayout.CENTER);
 	mainPanel.add(sidePanel, BorderLayout.LINE_END);
 
-	setDefaultCloseOperation(EXIT_ON_CLOSE);
+	setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     public GamePanel getGamePanel() {

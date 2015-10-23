@@ -12,8 +12,8 @@ import models.Player;
 
 public class GamePanel extends JPanel
 {
-    private BufferedImage lineImage;
-    private Player[] players;
+    private BufferedImage lineImage = null;
+    private Player[] players = null;
 
     public GamePanel() {
 	setBackground(Color.BLACK);
@@ -40,7 +40,8 @@ public class GamePanel extends JPanel
         for(Player p : this.players) {
             Line pLine = p.getLine();
             g2.setColor(p.getPlayerColor());
-            g2.fillOval((int) (pLine.x - pLine.width / 2), (int) (pLine.y - pLine.width / 2), (int) pLine.width, (int) pLine.width);
+            g2.fillOval((int) (pLine.getX() - pLine.getWidth() / 2), (int) (pLine.getY() - pLine.getWidth() / 2), (int) pLine
+                    .getWidth(), (int) pLine.getWidth());
         }
     }
 

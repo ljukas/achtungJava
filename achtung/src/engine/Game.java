@@ -1,5 +1,6 @@
 package engine;
 
+import java.awt.event.KeyAdapter;
 import java.awt.geom.Line2D;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -7,7 +8,6 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
 import models.Line;
@@ -16,7 +16,7 @@ import window.MainFrame;
 
 import javax.swing.*;
 
-public class Game implements KeyListener, ActionListener
+public class Game extends KeyAdapter implements ActionListener
 {
     /**
      * Game width is 1050 pixels
@@ -43,7 +43,6 @@ public class Game implements KeyListener, ActionListener
     private boolean pause = true;
     private int winCondition;
     private int time;
-    public static Game CURRENTGAME = null;
 
     public Game(Player[] players, Logic logic, MainFrame frame) {
         this.frame = frame;
@@ -54,7 +53,6 @@ public class Game implements KeyListener, ActionListener
     }
 
     public void start() {
-        CURRENTGAME = this;
 
         lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
 
@@ -89,8 +87,8 @@ public class Game implements KeyListener, ActionListener
             logic.timeForHole(p, time);
             Line pLine = p.getLine();
 
-            float x = pLine.x;
-            float y = pLine.y;
+            float x = pLine.getX();
+            float y = pLine.getY();
 
             // Move the current player one step ahead and check if we want to draw the line behind the player
             boolean drawLine = logic.movePlayer(lineImage, p);
@@ -98,8 +96,8 @@ public class Game implements KeyListener, ActionListener
             // Draw the line behind the player
             if(drawLine) {
                 g2.setColor(p.getPlayerColor());
-                g2.setStroke(new BasicStroke(pLine.width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                g2.draw(new Line2D.Float(x, y, pLine.x, pLine.y));
+                g2.setStroke(new BasicStroke(pLine.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+                g2.draw(new Line2D.Float(x, y, pLine.getX(), pLine.getY()));
             }
 
             // If the player collided with something give the other players one points
@@ -144,6 +142,8 @@ public class Game implements KeyListener, ActionListener
 
 
     @Override public void keyPressed(final KeyEvent e) {
+        super.keyPressed(e);
+        
         char c = Character.toLowerCase(e.getKeyChar());
 
         for(Player p : this.players) {
@@ -156,8 +156,9 @@ public class Game implements KeyListener, ActionListener
     }
 
     @Override public void keyReleased(final KeyEvent e) {
-        char c = Character.toLowerCase(e.getKeyChar());
+        super.keyReleased(e);
 
+        char c = Character.toLowerCase(e.getKeyChar());
 
         if(c == ' ' && pause) {
             pause = false;
@@ -173,6 +174,4 @@ public class Game implements KeyListener, ActionListener
         }
     }
 
-    @Override public void keyTyped(final KeyEvent e) {
-    }
 }

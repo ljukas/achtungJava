@@ -13,8 +13,8 @@ import javax.swing.border.LineBorder;
 
 public class SidePanel extends JPanel
 {
-    private JLabel[] points;
-    private Player[] players;
+    private JLabel[] points = null;
+    private Player[] players = null;
 
     public SidePanel() {
 	super(new GridLayout(0, 1));
