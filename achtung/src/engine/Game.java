@@ -16,6 +16,9 @@ import window.MainFrame;
 
 import javax.swing.*;
 
+/**
+ * Holds the entire game. Reads the key presses and runs the game.
+ */
 public class Game extends KeyAdapter implements ActionListener
 {
     /**
@@ -40,10 +43,11 @@ public class Game extends KeyAdapter implements ActionListener
     private Player[] players;
     private Logic logic;
     private Timer timer = null;
-    private boolean pause = true;
+    private boolean pause = false;
     private int winCondition;
     private int time;
 
+    // Constructor
     public Game(Player[] players, Logic logic, MainFrame frame) {
         this.frame = frame;
         this.players = players;
@@ -52,6 +56,8 @@ public class Game extends KeyAdapter implements ActionListener
         frame.getGamePanel().addKeyListener(this);
     }
 
+
+    // Starts a game from scratch
     public void start() {
 
         lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
@@ -76,7 +82,7 @@ public class Game extends KeyAdapter implements ActionListener
         timer.start();                          // Start game
     }
 
-    // If a player is alive, move it, check if it dies when moved etc.
+    // If a player is alive, move it, check if it dies when moved etc. Using game logic from Logic class.
     @Override public void actionPerformed(final ActionEvent e) {
         Graphics2D g2 = lineImage.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -134,6 +140,13 @@ public class Game extends KeyAdapter implements ActionListener
         }
     }
 
+    // Stops the round
+    public void stopGame() {
+        pause = false;
+        timer.stop();
+    }
+
+    // Starts a new round
     private void startNewRound() {
         pause = true;
         timer.stop();

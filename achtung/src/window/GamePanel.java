@@ -10,15 +10,20 @@ import engine.Game;
 import models.Line;
 import models.Player;
 
+/**
+ * Modified JPanel class that holds teh gameboard.
+ * Draws the players current position.
+ */
 public class GamePanel extends JPanel
 {
     private BufferedImage lineImage = null;
     private Player[] players = null;
 
+    // Constructor
     public GamePanel() {
-	setBackground(Color.BLACK);
-	setFocusable(true);
-	setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        setBackground(Color.BLACK);
+        setFocusable(true);
+        setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
     }
 
     // Draw players
@@ -45,6 +50,7 @@ public class GamePanel extends JPanel
         }
     }
 
+    // Works as intended, sets the sice of the window.
     @Override
     public Dimension getPreferredSize() {
 	return new Dimension(Game.GAME_WIDTH, Game.GAME_HEIGHT);

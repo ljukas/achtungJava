@@ -1,5 +1,8 @@
 package models;
 
+/**
+ * The line that each player draws behind them is handled by this class.
+ */
 public class Line
 {
     private float x;
@@ -68,6 +71,7 @@ public class Line
         this.speed = speed;
     }
 
+    // Used if powerups are implemented
     public boolean isChangeSide() {
         return changeSide;
     }

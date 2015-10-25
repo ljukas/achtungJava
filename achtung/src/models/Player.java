@@ -2,6 +2,10 @@ package models;
 
 import java.awt.Color;
 
+/**
+ * Contains info about a player, like which keys is used to stear it and if its dead etc.
+ * Also its color is stored here.
+ */
 public class Player
 {
     private Color playerColor;
@@ -14,6 +18,7 @@ public class Player
     private boolean collided;
     private int points;
 
+    // Constructor
     public Player(Color playerColor, char leftKey, char rightKey) {
         this.playerColor = playerColor;
         this.leftKey = leftKey;
@@ -25,28 +30,18 @@ public class Player
     }
 
 
+    // Getters and setters
+
     public Color getPlayerColor() {
         return playerColor;
-    }
-
-    public void setPlayerColor(final Color playerColor) {
-        this.playerColor = playerColor;
     }
 
     public char getLeftKey() {
         return leftKey;
     }
 
-    public void setLeftKey(final char leftKey) {
-        this.leftKey = leftKey;
-    }
-
     public char getRightKey() {
         return rightKey;
-    }
-
-    public void setRightKey(final char rightKey) {
-        this.rightKey = rightKey;
     }
 
     public boolean isDead() {
