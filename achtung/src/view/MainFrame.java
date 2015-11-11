@@ -1,8 +1,7 @@
-package window;
+package view;
 
 import engine.Game;
-import engine.Logic;
-import models.Player;
+import models.players.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +74,7 @@ public class MainFrame extends JFrame
 		stopGameItem.setToolTipText("Exit the current game");
 		stopGameItem.addActionListener(e -> stopGame());
 
-		JMenuItem resetPlayersItem = new JMenuItem("Reset Players");
+		JMenuItem resetPlayersItem = new JMenuItem("Reset players");
 		resetPlayersItem.setMnemonic(KeyEvent.VK_R);
 		resetPlayersItem.setToolTipText("Removes all current players");
 		resetPlayersItem.addActionListener(e -> resetPlayers());
@@ -97,10 +96,9 @@ public class MainFrame extends JFrame
 		if(players.length == 0) {
 			return;
 		}
-		Logic logic = new Logic();
 
-		// Assignment of static - Görs för att det bara ska finnas ett game igång samtidigt.
-		game = new Game(players, logic, this);
+		// Assignment of static - Gï¿½rs fï¿½r att det bara ska finnas ett game igï¿½ng samtidigt.
+		game = new Game(players, this);
 
 		game.start();
 

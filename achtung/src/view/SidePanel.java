@@ -1,6 +1,6 @@
-package window;
+package view;
 
-import models.Player;
+import models.players.Player;
 
 import java.awt.Font;
 import java.awt.Color;

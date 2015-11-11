@@ -1,18 +1,13 @@
 package engine;
 
 import java.awt.event.KeyAdapter;
-import java.awt.geom.Line2D;
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-import models.Line;
-import models.Player;
-import window.MainFrame;
+import models.players.Player;
+import view.MainFrame;
 
 import javax.swing.*;
 
@@ -39,19 +34,19 @@ public class Game extends KeyAdapter implements ActionListener
     private static final int FPS = 60;
 
     private BufferedImage lineImage = null;
+    private BufferedImage powerUpImage = null;
     private MainFrame frame;
     private Player[] players;
-    private Logic logic;
+    private Round round;
     private Timer timer = null;
     private boolean pause = false;
     private int winCondition;
     private int time;
 
     // Constructor
-    public Game(Player[] players, Logic logic, MainFrame frame) {
+    public Game(Player[] players, MainFrame frame) {
         this.frame = frame;
         this.players = players;
-        this.logic = logic;
 
         frame.getGamePanel().addKeyListener(this);
     }
@@ -61,14 +56,22 @@ public class Game extends KeyAdapter implements ActionListener
     public void start() {
 
         lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+        powerUpImage = new BufferedImage(Game.GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
 
+        round = new Round(lineImage, powerUpImage, players);
         frame.getGamePanel().setLineImage(lineImage);
+        frame.getGamePanel().setPowerUpImage(powerUpImage);
         frame.getGamePanel().addPlayers(players);
         frame.getSidePanel().addPlayers(players);
         this.frame.pack();
 
+        // remove all powerups from players so they dont persist through rounds.
+        for(Player p : players) {
+            p.getLine().removeAllPowerups();
+        }
+
         // Place the players on the board
-        logic.placePlayers(players);
+        round.placePlayers(players);
 
         // Repaint here so when a new round start the old game isn't shown in the 2 sec starting period
         frame.getGamePanel().repaint();
@@ -82,46 +85,27 @@ public class Game extends KeyAdapter implements ActionListener
         timer.start();                          // Start game
     }
 
-    // If a player is alive, move it, check if it dies when moved etc. Using game logic from Logic class.
+    // If a player is alive, move it, check if it dies when moved etc. Using game round from Round class.
     @Override public void actionPerformed(final ActionEvent e) {
-        Graphics2D g2 = lineImage.createGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                            RenderingHints.VALUE_ANTIALIAS_ON);
 
 
-        for(Player p : this.players) {
-            logic.timeForHole(p, time);
-            Line pLine = p.getLine();
+        round.update(time);
 
-            float x = pLine.getX();
-            float y = pLine.getY();
-
-            // Move the current player one step ahead and check if we want to draw the line behind the player
-            boolean drawLine = logic.movePlayer(lineImage, p);
-
-            // Draw the line behind the player
-            if(drawLine) {
-                g2.setColor(p.getPlayerColor());
-                g2.setStroke(new BasicStroke(pLine.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-                g2.draw(new Line2D.Float(x, y, pLine.getX(), pLine.getY()));
-            }
-
-            // If the player collided with something give the other players one points
-            logic.givePoints(this.players, p);
-
-        }
-        g2.dispose();
         frame.getSidePanel().updatePoints();
         frame.getGamePanel().repaint();
+
         time += 1;
 
 
         // Check if all but one players are dead. If so, start new round, also check if a player has won
-        if(logic.newRoundCheck(this.players)) {
+        if(round.newRoundCheck(this.players)) {
             checkForWinner();
             startNewRound();
+
         }
     }
+
+
 
     // Checks for a winner, if winner found set all points to zero and announce winner
     private void checkForWinner() {
@@ -161,9 +145,9 @@ public class Game extends KeyAdapter implements ActionListener
 
         for(Player p : this.players) {
             if(p.getLeftKey() == c) {
-                logic.startLeftTurn(p);
+                round.startLeftTurn(p);
             } else if(p.getRightKey() == c) {
-                logic.startRightTurn(p);
+                round.startRightTurn(p);
             }
         }
     }
@@ -180,9 +164,9 @@ public class Game extends KeyAdapter implements ActionListener
 
         for(Player p : this.players) {
             if(p.getLeftKey() == c) {
-                logic.stopLeftTurn(p);
+                round.stopLeftTurn(p);
             } else if(p.getRightKey() == c) {
-                logic.stopRightTurn(p);
+                round.stopRightTurn(p);
             }
         }
     }

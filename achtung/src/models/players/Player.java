@@ -1,4 +1,4 @@
-package models;
+package models.players;
 
 import java.awt.Color;
 
@@ -15,8 +15,10 @@ public class Player
     private boolean turnLeft;
     private Line line;
     private boolean dead;
-    private boolean collided;
     private int points;
+
+    //PowerUpEffect constans
+
 
     // Constructor
     public Player(Color playerColor, char leftKey, char rightKey) {
@@ -26,11 +28,8 @@ public class Player
         this.line = new Line();
         this.dead = false;
         this.points = 0;
-        this.collided = false;
+
     }
-
-
-    // Getters and setters
 
     public Color getPlayerColor() {
         return playerColor;
@@ -80,13 +79,8 @@ public class Player
         this.points = points;
     }
 
-    public void setCollided(final boolean collided) {
-        this.collided = collided;
-    }
 
-    public boolean didCollide() {
-        return collided;
-    }
+
 }
 
 
