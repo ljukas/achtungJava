@@ -1,6 +1,7 @@
 package models.powerups;
 
 import models.Position;
+import models.powerups.PowerUpEffect.PowerUpType;
 
 /**
  * Contains all the info about a powerup.

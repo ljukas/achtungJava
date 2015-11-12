@@ -27,17 +27,19 @@ public class Game extends KeyAdapter implements ActionListener
     /**
      * The delay between each round starts is 2 seconds
      */
-    private static final int INITIAL_DELAY = 2000;
+    private static final int INITIAL_DELAY = 3000;
     /**
      * The game speed is 60 frames per second
      */
     private static final int FPS = 60;
+	/**
+     * Used to set the score one has to read to win = numOfPlayers * SCORE_CONSTANT - SCORE_CONSTANT
+     */
+    public static final int SCORE_CONSTANT = 10;
 
-    private BufferedImage lineImage = null;
-    private BufferedImage powerUpImage = null;
     private MainFrame frame;
     private Player[] players;
-    private Round round;
+    private Round round = null;
     private Timer timer = null;
     private boolean pause = false;
     private int winCondition;
@@ -55,8 +57,8 @@ public class Game extends KeyAdapter implements ActionListener
     // Starts a game from scratch
     public void start() {
 
-        lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
-        powerUpImage = new BufferedImage(Game.GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+        final BufferedImage lineImage = new BufferedImage(Game.GAME_WIDTH, Game.GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+        final BufferedImage powerUpImage = new BufferedImage(Game.GAME_WIDTH, GAME_HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
 
         round = new Round(lineImage, powerUpImage, players);
         frame.getGamePanel().setLineImage(lineImage);
@@ -65,10 +67,11 @@ public class Game extends KeyAdapter implements ActionListener
         frame.getSidePanel().addPlayers(players);
         this.frame.pack();
 
-        // remove all powerups from players so they dont persist through rounds.
+        // remove all powerups from players and the round so they dont persist through rounds.
         for(Player p : players) {
             p.getLine().removeAllPowerups();
         }
+        round.removeAllRoundPowerups();
 
         // Place the players on the board
         round.placePlayers(players);
@@ -77,12 +80,13 @@ public class Game extends KeyAdapter implements ActionListener
         frame.getGamePanel().repaint();
 
         // The rules of the game state that to win you have to get points equal to 10 times number of players minus 10
-        winCondition = this.players.length * 10 - 10;
+        winCondition = this.players.length * SCORE_CONSTANT - SCORE_CONSTANT;
 
         time = 0;
         timer = new Timer(1000 / FPS, this);    // Fires of the actionPerformed-event on each timer tick
         timer.setInitialDelay(INITIAL_DELAY);            // Start game after 2 sec delay
         timer.start();                          // Start game
+        MusicPlayer.startOfRound();
     }
 
     // If a player is alive, move it, check if it dies when moved etc. Using game round from Round class.
@@ -140,7 +144,7 @@ public class Game extends KeyAdapter implements ActionListener
 
     @Override public void keyPressed(final KeyEvent e) {
         super.keyPressed(e);
-        
+
         char c = Character.toLowerCase(e.getKeyChar());
 
         for(Player p : this.players) {

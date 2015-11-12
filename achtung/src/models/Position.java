@@ -14,8 +14,8 @@ public class Position {
     }
 
     public float distanceFrom(Position otherPosition) {
-        return (float) Math.sqrt(Math.pow(this.x - otherPosition.getX(), 2)
-                + Math.pow(this.y - otherPosition.getY(), 2));
+        return (float) Math.sqrt(Math.pow(this.x - otherPosition.x, 2)
+                + Math.pow(this.y - otherPosition.y, 2));
     }
 
     public static Position getRandomPosition(float minX, float minY, float maxX, float maxY) {

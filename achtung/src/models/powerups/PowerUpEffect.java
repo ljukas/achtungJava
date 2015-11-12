@@ -1,25 +1,14 @@
 package models.powerups;
 
-import models.players.Line;
-
 /**
  * Interface over the different functions a powerUp must have.
  */
 public interface PowerUpEffect {
 
-    /**
-     * Add the effect of the power up to a line.
-     *
-     * @param line - the line that gets the power up added
-     */
-    void applyEffect(Line line);
-
-    /**
-     * Remove the effect of the power up from a line.
-     *
-     * @param line - the line that gets the power up removed.
-     */
-    void removeEffect(Line line);
+    // Wants javadoc for enums, not needed.
+    enum PowerUpType {
+        SELF, EVERYONE, EVERYONE_ELSE
+    }
 
     /**
      * @return the duration of this power up
@@ -43,7 +32,6 @@ public interface PowerUpEffect {
      * Returns trueif the type is allowed for the particular power up
      *
      * @param - who the power up affects
-     *
      * @return - if type is allowed
      */
     PowerUpType[] getAllowedTypes();

@@ -1,13 +1,13 @@
 package models.powerups.type;
 
 import models.players.Line;
-import models.powerups.PowerUpEffect;
-import models.powerups.PowerUpType;
+import models.powerups.LinePowerUpEffect;
 
 /**
  * Created by Lukas on 2015-11-09.
  */
-public class FastPowerUp implements PowerUpEffect {
+public class FastPowerUp implements LinePowerUpEffect
+{
 
     private static final String NAME = "fast";
     private static final int DURATION = 180;

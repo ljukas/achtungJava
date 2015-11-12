@@ -64,7 +64,7 @@ public class GamePanel extends JPanel {
         pg2.drawImage(this.powerUpImage, null, 0, 0);
     }
 
-    // Works as intended, sets the sice of the view.
+    // Works as intended, sets the size of the view.
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(Game.GAME_WIDTH, Game.GAME_HEIGHT);

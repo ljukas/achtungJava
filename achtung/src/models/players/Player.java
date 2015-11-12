@@ -18,6 +18,7 @@ public class Player
     private int points;
 
     //PowerUpEffect constans
+    private boolean changingSide;
 
 
     // Constructor
@@ -28,6 +29,7 @@ public class Player
         this.line = new Line();
         this.dead = false;
         this.points = 0;
+        this.changingSide = false;
 
     }
 
@@ -79,8 +81,13 @@ public class Player
         this.points = points;
     }
 
+    public void setChangingSide(final boolean changingSide) {
+        this.changingSide = changingSide;
+    }
 
-
+    public boolean isChangingSide() {
+        return changingSide;
+    }
 }
 
 

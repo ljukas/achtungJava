@@ -1,8 +1,8 @@
 package models.players;
 
 import models.Position;
+import models.powerups.LinePowerUpEffect;
 import models.powerups.PowerUp;
-import models.powerups.PowerUpEffect;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,19 +12,20 @@ import java.util.List;
  * The line that each player draws behind them is handled by this class.
  */
 public class Line {
-    private Position position;
+    private Position position = null;
     private float pi;
     private float width;
     private double speed;
     private boolean isHole;
     private int timeWhenHole;
     private int okToHole;
-    private final List<PowerUp<PowerUpEffect>> powerUps = new ArrayList<>();
+    // Dont understand inspection, but it works as intended
+    private final List<PowerUp<LinePowerUpEffect>> powerUps = new ArrayList<>();
 
     private final static int TURN_SHARPNESS = 60;
     private final static double HOLE_TIME_CONSTANT = 2.2;
     private final static int HOLE_LENGTH = 60;
-    private final static float HOLE_CHANCE = (float) 0.01;
+    private final static float HOLE_CHANCE = 0.01f;
 
     /**
      * Updates a player
@@ -63,26 +64,26 @@ public class Line {
     private void timeForHole(int time) {
 
         // If the player is to make a hole, stop doing after 13 frames
-        if (this.isHole()) {
-            if ((time - this.getTimeWhenHole()) >= (this.getWidth() * HOLE_TIME_CONSTANT)) {
-                this.setHole(false);
-                this.setTimeWhenHole(0);
-                this.setOkToHole(HOLE_LENGTH);
+        if (this.isHole) {
+            if ((time - timeWhenHole) >= (width * HOLE_TIME_CONSTANT)) {
+                this.isHole = false;
+                this.timeWhenHole = 0;
+                this.okToHole = HOLE_LENGTH;
             }
             return;
         }
 
-        if (this.getOkToHole() > 0) {
-            this.setOkToHole(this.getOkToHole() - 1);
+        if (okToHole > 0) {
+            this.okToHole = okToHole - 1;
         }
 
         // Dont let holes be created before 1 second passed since last hole
-        if (this.getOkToHole() == 0) {
+        if (okToHole == 0) {
 
             // 1% chance per tick to create hole atm.
             if (Math.random() <= HOLE_CHANCE) {
-                this.setHole(true);
-                this.setTimeWhenHole(time);
+                this.isHole = true;
+                this.timeWhenHole = time;
             }
 
         }
@@ -93,9 +94,9 @@ public class Line {
      *
      * @param effect - the effect that is to be added to the line
      */
-    public void addPowerUp(PowerUpEffect effect) {
+    public void addPowerUp(LinePowerUpEffect effect) {
         if (!effect.isStackable()) {
-            for (PowerUp<PowerUpEffect> powerUp : this.powerUps) {
+            for (PowerUp<LinePowerUpEffect> powerUp : this.powerUps) {
                 if (powerUp.getEffect().getClass() == effect.getClass()) {
                     powerUp.resetTimer();
                     return;
@@ -111,10 +112,10 @@ public class Line {
      * Updates the powerups that are active. One might need to be removed because its duration has passed
      */
     public void updatePowerUps() {
-        Iterator<PowerUp<PowerUpEffect>> iterator = this.powerUps.iterator();
+        Iterator<PowerUp<LinePowerUpEffect>> iterator = this.powerUps.iterator();
 
         while (iterator.hasNext()) {
-            PowerUp<PowerUpEffect> power = iterator.next();
+            PowerUp<LinePowerUpEffect> power = iterator.next();
             power.update();
             if (!power.isActive()) {
                 power.getEffect().removeEffect(this);
@@ -127,10 +128,10 @@ public class Line {
      * Removes all current powerups from a line
      */
     public void removeAllPowerups() {
-        Iterator<PowerUp<PowerUpEffect>> iterator = this.powerUps.iterator();
+        Iterator<PowerUp<LinePowerUpEffect>> iterator = this.powerUps.iterator();
 
         while (iterator.hasNext()) {
-            PowerUp<PowerUpEffect> power = iterator.next();
+            PowerUp<LinePowerUpEffect> power = iterator.next();
 
             power.getEffect().removeEffect(this);
             iterator.remove();
@@ -179,23 +180,16 @@ public class Line {
     }
 
     public boolean isHole() {
-        return isHole;
+        return this.isHole;
     }
 
+    // Maybe not optimal name but is easy to understand when reading function that uses it
     public void setHole(final boolean hole) {
         this.isHole = hole;
     }
 
-    public int getTimeWhenHole() {
-        return timeWhenHole;
-    }
-
     public void setTimeWhenHole(final int timeWhenHole) {
         this.timeWhenHole = timeWhenHole;
-    }
-
-    public int getOkToHole() {
-        return okToHole;
     }
 
     public void setOkToHole(final int okToHole) {

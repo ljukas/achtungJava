@@ -42,13 +42,6 @@ public class PowerUp<T extends PowerUpEffect> {
     }
 
     /**
-     * @return the duration left of power up.
-     */
-    public int getTimeLeft() {
-        return this.effect.getDuration() - this.timeElapsed;
-    }
-
-    /**
      * Reset the timer of a powerup so that its duration is extended.
      */
     public void resetTimer() {

@@ -1,16 +1,15 @@
 package models.powerups.type;
 
 import models.players.Line;
-import models.powerups.PowerUpEffect;
-import models.powerups.PowerUpType;
+import models.powerups.LinePowerUpEffect;
 
 /**
  * Created by Lukas on 2015-11-10.
  */
-public class ThickPowerUp implements PowerUpEffect {
+public class ThickPowerUp implements LinePowerUpEffect {
 
     private static final String NAME = "thick";
-    private static final int DURATION = 180;
+    private static final int DURATION = 250;
     private static final boolean STACKABLE = false;
 
     @Override

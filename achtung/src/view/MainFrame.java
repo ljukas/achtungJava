@@ -16,8 +16,8 @@ public class MainFrame extends JFrame
 {
 	private GamePanel gamePanel = null;
 	private SidePanel sidePanel = null;
-	private static Game game = null; 		// Game name is appropriate length
-	private static Player[] players = new Player[0];
+	private Game game = null; 		// Game name is appropriate length
+	private Player[] players = new Player[0];
 
 	// Constructor
 	public MainFrame() {
@@ -97,7 +97,6 @@ public class MainFrame extends JFrame
 			return;
 		}
 
-		// Assignment of static - G�rs f�r att det bara ska finnas ett game ig�ng samtidigt.
 		game = new Game(players, this);
 
 		game.start();
@@ -116,6 +115,7 @@ public class MainFrame extends JFrame
 		Color finalColor;
 
 		JPanel newPlayerPanel = new JPanel();
+		// Sets hgap to 20 pixels so its not so cramped
 		newPlayerPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 20, 10));
 
 		JComboBox<String> playerColors = new JComboBox<>(comboBoxColors);
